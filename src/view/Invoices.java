@@ -5,9 +5,14 @@
  */
 package view;
 
+import com.sun.javafx.fxml.expression.Expression;
 import controller.ProductControl;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import model.Invoice;
 import model.Product;
 
 /**
@@ -19,6 +24,10 @@ public class Invoices extends javax.swing.JFrame {
     /**
      * Creates new form Invoices
      */
+    Invoice i = new Invoice();
+    List<Product> addproduct = new ArrayList();
+    Product currentproduct;
+
     public Invoices() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -50,7 +59,7 @@ public class Invoices extends javax.swing.JFrame {
         invoiceQtyText = new javax.swing.JTextField();
         invoiceAddButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        addProductTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -103,6 +112,11 @@ public class Invoices extends javax.swing.JFrame {
                 "ID", "Product Name", "Description", "Selling Price", "Quantity"
             }
         ));
+        viewProductTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                viewProductTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(viewProductTable);
         if (viewProductTable.getColumnModel().getColumnCount() > 0) {
             viewProductTable.getColumnModel().getColumn(0).setMinWidth(5);
@@ -130,8 +144,13 @@ public class Invoices extends javax.swing.JFrame {
         jLabel3.setText("Qty");
 
         invoiceAddButton.setText("Add to Invoice");
+        invoiceAddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                invoiceAddButtonActionPerformed(evt);
+            }
+        });
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        addProductTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -142,18 +161,18 @@ public class Invoices extends javax.swing.JFrame {
                 "ID", "Product Name", "Quantity", "Unit Price", "Total"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setMinWidth(2);
-            jTable2.getColumnModel().getColumn(0).setMaxWidth(50);
-            jTable2.getColumnModel().getColumn(1).setMinWidth(2);
-            jTable2.getColumnModel().getColumn(1).setMaxWidth(300);
-            jTable2.getColumnModel().getColumn(2).setMinWidth(2);
-            jTable2.getColumnModel().getColumn(2).setMaxWidth(100);
-            jTable2.getColumnModel().getColumn(3).setMinWidth(2);
-            jTable2.getColumnModel().getColumn(3).setMaxWidth(100);
-            jTable2.getColumnModel().getColumn(4).setMinWidth(2);
-            jTable2.getColumnModel().getColumn(4).setMaxWidth(100);
+        jScrollPane2.setViewportView(addProductTable);
+        if (addProductTable.getColumnModel().getColumnCount() > 0) {
+            addProductTable.getColumnModel().getColumn(0).setMinWidth(2);
+            addProductTable.getColumnModel().getColumn(0).setMaxWidth(50);
+            addProductTable.getColumnModel().getColumn(1).setMinWidth(2);
+            addProductTable.getColumnModel().getColumn(1).setMaxWidth(300);
+            addProductTable.getColumnModel().getColumn(2).setMinWidth(2);
+            addProductTable.getColumnModel().getColumn(2).setMaxWidth(100);
+            addProductTable.getColumnModel().getColumn(3).setMinWidth(2);
+            addProductTable.getColumnModel().getColumn(3).setMaxWidth(100);
+            addProductTable.getColumnModel().getColumn(4).setMinWidth(2);
+            addProductTable.getColumnModel().getColumn(4).setMaxWidth(100);
         }
 
         jLabel4.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
@@ -167,6 +186,22 @@ public class Invoices extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 0));
         jLabel6.setText("Total");
+
+        invoiceDiscountText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                invoiceDiscountTextActionPerformed(evt);
+            }
+        });
+        invoiceDiscountText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                invoiceDiscountTextKeyTyped(evt);
+            }
+        });
+        invoiceDiscountText.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                invoiceDiscountTextVetoableChange(evt);
+            }
+        });
 
         invoicePrintButton.setText("Print");
 
@@ -310,25 +345,73 @@ public class Invoices extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void invoiceSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceSearchButtonActionPerformed
         List<Product> searchProducts = ProductControl.getSearchProducts(invoiceSearchText.getText());
         displayProduct1(searchProducts);
     }//GEN-LAST:event_invoiceSearchButtonActionPerformed
 
     private void viewInvoiceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewInvoiceButtonActionPerformed
-       new ViewInvoice().setVisible(true);
-         this.dispose();
+        new ViewInvoice().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_viewInvoiceButtonActionPerformed
 
     private void invoiceHomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceHomeButtonActionPerformed
         new Home().setVisible(true);
-         this.dispose();
+        this.dispose();
     }//GEN-LAST:event_invoiceHomeButtonActionPerformed
 
     private void invoiceAddCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceAddCustomerButtonActionPerformed
-       new Customers().setVisible(true);
+
     }//GEN-LAST:event_invoiceAddCustomerButtonActionPerformed
+    
+    private void viewProductTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProductTableMouseClicked
+        int index = viewProductTable.getSelectedRow();
+        TableModel model = viewProductTable.getModel();
+         currentproduct = new Product();
+        currentproduct.setProductId(Integer.parseInt(model.getValueAt(index, 0).toString()));
+        currentproduct.setProductName(model.getValueAt(index, 1).toString());
+        currentproduct.setSellingPrice(new BigDecimal(model.getValueAt(index, 3).toString()));
+        invoiceProductIdText.setText(Integer.toString(currentproduct.getProductId()));
+        invoiceProductNameText.setText(currentproduct.getProductName());
+    }//GEN-LAST:event_viewProductTableMouseClicked
+
+    private void invoiceAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceAddButtonActionPerformed
+        // TODO add your handling code here:
+        currentproduct.setQuantity(Integer.parseInt(invoiceQtyText.getText()));
+
+        addproduct.add(currentproduct);
+        addProduct1(addproduct);
+       
+        BigDecimal amount=BigDecimal.ZERO;
+       
+        for(int i=0;i<addProductTable.getRowCount();i++){
+             //TableModel model = viewProductTable.getModel();
+           BigDecimal total=new BigDecimal(addProductTable.getValueAt(i,4).toString());
+           amount=amount.add(total);
+            
+        }
+        invoiceTotal1Text.setText(amount.toString());
+        //BigDecimal a=100;
+       
+
+    }//GEN-LAST:event_invoiceAddButtonActionPerformed
+
+    private void invoiceDiscountTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_invoiceDiscountTextKeyTyped
+         
+    }//GEN-LAST:event_invoiceDiscountTextKeyTyped
+
+    private void invoiceDiscountTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceDiscountTextActionPerformed
+       BigDecimal discount=null;
+       BigDecimal finalTotal=null;
+          discount=(new BigDecimal(invoiceTotal1Text.getText()).multiply(new BigDecimal(invoiceDiscountText.getText())).divide(new BigDecimal(100)));
+          finalTotal=new BigDecimal(invoiceTotal1Text.getText()).subtract(discount);
+          invoiceTotal2Text.setText(finalTotal.toString());
+    }//GEN-LAST:event_invoiceDiscountTextActionPerformed
+
+    private void invoiceDiscountTextVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_invoiceDiscountTextVetoableChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_invoiceDiscountTextVetoableChange
 
     /**
      * @param args the command line arguments
@@ -366,6 +449,7 @@ public class Invoices extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable addProductTable;
     private javax.swing.JButton invoiceAddButton;
     private javax.swing.JButton invoiceAddCustomerButton;
     private javax.swing.JTextField invoiceCustomerText;
@@ -390,12 +474,11 @@ public class Invoices extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
     private javax.swing.JButton viewInvoiceButton;
     private javax.swing.JTable viewProductTable;
     // End of variables declaration//GEN-END:variables
 
- void displayProduct1(List<Product> products) {
+    void displayProduct1(List<Product> products) {
         DefaultTableModel model = (DefaultTableModel) viewProductTable.getModel();
         model.setRowCount(0);
         Object[] row = new Object[5];
@@ -410,5 +493,22 @@ public class Invoices extends javax.swing.JFrame {
 
         }
         viewProductTable.setModel(model);
+    }
+
+    void addProduct1(List<Product> products) {
+        DefaultTableModel model = (DefaultTableModel) addProductTable.getModel();
+        model.setRowCount(0);
+        Object[] row = new Object[5];
+        for (int i = 0; i < products.size(); i++) {
+            row[0] = products.get(i).getProductId();
+            row[1] = products.get(i).getProductName();
+            row[2] = products.get(i).getQuantity();
+            row[3] = products.get(i).getSellingPrice();
+            row[4] = products.get(i).getSellingPrice().multiply(new BigDecimal(products.get(i).getQuantity()));
+
+            model.addRow(row);
+
+        }
+        addProductTable.setModel(model);
     }
 }
