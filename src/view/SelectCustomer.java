@@ -8,7 +8,9 @@ package view;
 import controller.CustomerControl;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import model.Customer;
+import model.Invoice;
 
 /**
  *
@@ -24,6 +26,16 @@ public class SelectCustomer extends javax.swing.JDialog {
         initComponents();
         this.setLocationRelativeTo(null);
         selectCustomers(CustomerControl.getAllCustomer());
+        setModal(true);
+    }
+    Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     /**
@@ -35,7 +47,7 @@ public class SelectCustomer extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        dialog = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         selectCustomerSearchText = new javax.swing.JTextField();
         selectCustomerSearch = new javax.swing.JButton();
@@ -45,7 +57,7 @@ public class SelectCustomer extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 102, 102));
+        dialog.setBackground(new java.awt.Color(0, 102, 102));
 
         jLabel1.setFont(new java.awt.Font("Traditional Arabic", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(204, 204, 0));
@@ -78,39 +90,44 @@ public class SelectCustomer extends javax.swing.JDialog {
 
         selectCustomerOkButton.setText("OK");
         selectCustomerOkButton.setActionCommand("OK");
+        selectCustomerOkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectCustomerOkButtonActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout dialogLayout = new javax.swing.GroupLayout(dialog);
+        dialog.setLayout(dialogLayout);
+        dialogLayout.setHorizontalGroup(
+            dialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(dialogLayout.createSequentialGroup()
                     .addGap(37, 37, 37)
                     .addComponent(jLabel1)
                     .addContainerGap(588, Short.MAX_VALUE))
-                .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(dialogLayout.createSequentialGroup()
                     .addGap(72, 72, 72)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(120, Short.MAX_VALUE)))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(dialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogLayout.createSequentialGroup()
                         .addComponent(selectCustomerSearchText, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(selectCustomerSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(330, 330, 330))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dialogLayout.createSequentialGroup()
                         .addComponent(selectCustomerOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(154, 154, 154))))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        dialogLayout.setVerticalGroup(
+            dialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dialogLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(dialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectCustomerSearchText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(selectCustomerSearch))
                 .addGap(18, 18, 18)
@@ -125,14 +142,14 @@ public class SelectCustomer extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dialog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -156,6 +173,21 @@ public class SelectCustomer extends javax.swing.JDialog {
         a.invoiceCustomerText.setText(c.getCustomerName());
         */
     }//GEN-LAST:event_selectCustomerTableMouseEntered
+
+    private void selectCustomerOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectCustomerOkButtonActionPerformed
+      int index = selectCustomerTable.getSelectedRow();
+        TableModel model = selectCustomerTable.getModel();
+        customer=new Customer();
+        customer.setCustomerId(Integer.parseInt(model.getValueAt(index, 0).toString()));
+        customer.setCustomerName(model.getValueAt(index, 1).toString());
+        setCustomer(customer);
+        
+        this.dispose();
+        
+        
+      
+     
+    }//GEN-LAST:event_selectCustomerOkButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -200,8 +232,8 @@ public class SelectCustomer extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel dialog;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton selectCustomerOkButton;
     private javax.swing.JButton selectCustomerSearch;

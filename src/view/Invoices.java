@@ -5,13 +5,14 @@
  */
 package view;
 
-import com.sun.javafx.fxml.expression.Expression;
 import controller.ProductControl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import model.Customer;
 import model.Invoice;
 import model.Product;
 
@@ -33,6 +34,7 @@ public class Invoices extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         displayProduct1(ProductControl.getAllProducts());
     }
+    Customer c;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,6 +72,7 @@ public class Invoices extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         invoiceCustomerText = new javax.swing.JTextField();
         invoiceAddCustomerButton = new javax.swing.JButton();
+        invoiceRemoveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -218,6 +221,13 @@ public class Invoices extends javax.swing.JFrame {
             }
         });
 
+        invoiceRemoveButton.setText("Remove Product");
+        invoiceRemoveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                invoiceRemoveButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -233,25 +243,27 @@ public class Invoices extends javax.swing.JFrame {
                                 .addComponent(invoiceSearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(188, 188, 188))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(invoiceTotal1Text, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(27, 27, 27)
                                         .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(invoiceDiscountText, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel7)
                                         .addGap(18, 18, 18)
                                         .addComponent(invoiceCustomerText, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(invoiceAddCustomerButton)
-                                        .addGap(222, 222, 222)))
+                                        .addGap(66, 66, 66)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(invoiceDiscountText)
+                                    .addComponent(invoiceRemoveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(invoicePrintButton, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(invoiceTotal2Text, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -324,7 +336,8 @@ public class Invoices extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(invoiceCustomerText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(invoiceAddCustomerButton))))
+                            .addComponent(invoiceAddCustomerButton)
+                            .addComponent(invoiceRemoveButton))))
                 .addGap(21, 21, 21))
         );
 
@@ -345,7 +358,7 @@ public class Invoices extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void invoiceSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceSearchButtonActionPerformed
         List<Product> searchProducts = ProductControl.getSearchProducts(invoiceSearchText.getText());
         displayProduct1(searchProducts);
@@ -362,56 +375,79 @@ public class Invoices extends javax.swing.JFrame {
     }//GEN-LAST:event_invoiceHomeButtonActionPerformed
 
     private void invoiceAddCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceAddCustomerButtonActionPerformed
+        SelectCustomer dialog = new SelectCustomer(this, rootPaneCheckingEnabled);
+
+        dialog.setVisible(true);
+        c = new Customer();
+        c = dialog.getCustomer();
+
+        invoiceCustomerText.setText(c.getCustomerName());
+
 
     }//GEN-LAST:event_invoiceAddCustomerButtonActionPerformed
-    
+
     private void viewProductTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_viewProductTableMouseClicked
         int index = viewProductTable.getSelectedRow();
         TableModel model = viewProductTable.getModel();
-         currentproduct = new Product();
+        currentproduct = new Product();
         currentproduct.setProductId(Integer.parseInt(model.getValueAt(index, 0).toString()));
         currentproduct.setProductName(model.getValueAt(index, 1).toString());
         currentproduct.setSellingPrice(new BigDecimal(model.getValueAt(index, 3).toString()));
         invoiceProductIdText.setText(Integer.toString(currentproduct.getProductId()));
         invoiceProductNameText.setText(currentproduct.getProductName());
+
     }//GEN-LAST:event_viewProductTableMouseClicked
 
     private void invoiceAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceAddButtonActionPerformed
         // TODO add your handling code here:
-        currentproduct.setQuantity(Integer.parseInt(invoiceQtyText.getText()));
+        if (!viewProductTable.getSelectionModel().isSelectionEmpty() && invoiceQtyText.getText().length() > 0) {
+            currentproduct.setQuantity(Integer.parseInt(invoiceQtyText.getText()));
 
-        addproduct.add(currentproduct);
-        addProduct1(addproduct);
-       
-        BigDecimal amount=BigDecimal.ZERO;
-       
-        for(int i=0;i<addProductTable.getRowCount();i++){
-             //TableModel model = viewProductTable.getModel();
-           BigDecimal total=new BigDecimal(addProductTable.getValueAt(i,4).toString());
-           amount=amount.add(total);
-            
+            addproduct.add(currentproduct);
+            addProduct1(addproduct);
+
+            BigDecimal amount = BigDecimal.ZERO;
+
+            for (int i = 0; i < addProductTable.getRowCount(); i++) {
+                //TableModel model = viewProductTable.getModel();
+                BigDecimal total = new BigDecimal(addProductTable.getValueAt(i, 4).toString());
+                amount = amount.add(total);
+
+            }
+            invoiceTotal1Text.setText(amount.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Please Select products ", "ERROR", JOptionPane.INFORMATION_MESSAGE);
         }
-        invoiceTotal1Text.setText(amount.toString());
         //BigDecimal a=100;
-       
+
 
     }//GEN-LAST:event_invoiceAddButtonActionPerformed
 
     private void invoiceDiscountTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_invoiceDiscountTextKeyTyped
-         
+
     }//GEN-LAST:event_invoiceDiscountTextKeyTyped
 
     private void invoiceDiscountTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceDiscountTextActionPerformed
-       BigDecimal discount=null;
-       BigDecimal finalTotal=null;
-          discount=(new BigDecimal(invoiceTotal1Text.getText()).multiply(new BigDecimal(invoiceDiscountText.getText())).divide(new BigDecimal(100)));
-          finalTotal=new BigDecimal(invoiceTotal1Text.getText()).subtract(discount);
-          invoiceTotal2Text.setText(finalTotal.toString());
+        if (invoiceDiscountText.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Please Enter Discount", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            BigDecimal discount = null;
+            BigDecimal finalTotal = null;
+            discount = (new BigDecimal(invoiceTotal1Text.getText()).multiply(new BigDecimal(invoiceDiscountText.getText())).divide(new BigDecimal(100)));
+            finalTotal = new BigDecimal(invoiceTotal1Text.getText()).subtract(discount);
+            invoiceTotal2Text.setText(finalTotal.toString());
+        }
     }//GEN-LAST:event_invoiceDiscountTextActionPerformed
 
     private void invoiceDiscountTextVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_invoiceDiscountTextVetoableChange
         // TODO add your handling code here:
     }//GEN-LAST:event_invoiceDiscountTextVetoableChange
+
+    private void invoiceRemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceRemoveButtonActionPerformed
+        int index = addProductTable.getSelectedRow();
+        ((DefaultTableModel) addProductTable.getModel()).removeRow(index);
+        addproduct.remove(index);
+    }//GEN-LAST:event_invoiceRemoveButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -460,6 +496,7 @@ public class Invoices extends javax.swing.JFrame {
     private javax.swing.JLabel invoiceProductName;
     private javax.swing.JTextField invoiceProductNameText;
     private javax.swing.JTextField invoiceQtyText;
+    private javax.swing.JButton invoiceRemoveButton;
     private javax.swing.JButton invoiceSearchButton;
     private javax.swing.JTextField invoiceSearchText;
     private javax.swing.JTextField invoiceTotal1Text;
@@ -511,4 +548,5 @@ public class Invoices extends javax.swing.JFrame {
         }
         addProductTable.setModel(model);
     }
+
 }
