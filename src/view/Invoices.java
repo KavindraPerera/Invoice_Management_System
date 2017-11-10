@@ -5,8 +5,10 @@
  */
 package view;
 
+import controller.InvoiceControl;
 import controller.ProductControl;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -35,6 +37,14 @@ public class Invoices extends javax.swing.JFrame {
         displayProduct1(ProductControl.getAllProducts());
     }
     Customer c;
+
+    public Customer getC() {
+        return c;
+    }
+
+    public void setC(Customer c) {
+        this.c = c;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,6 +217,11 @@ public class Invoices extends javax.swing.JFrame {
         });
 
         invoicePrintButton.setText("Print");
+        invoicePrintButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                invoicePrintButtonActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Lucida Fax", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 0));
@@ -382,7 +397,7 @@ public class Invoices extends javax.swing.JFrame {
         c = dialog.getCustomer();
 
         invoiceCustomerText.setText(c.getCustomerName());
-
+        setC(c);
 
     }//GEN-LAST:event_invoiceAddCustomerButtonActionPerformed
 
@@ -448,6 +463,32 @@ public class Invoices extends javax.swing.JFrame {
         ((DefaultTableModel) addProductTable.getModel()).removeRow(index);
         addproduct.remove(index);
     }//GEN-LAST:event_invoiceRemoveButtonActionPerformed
+
+    private void invoicePrintButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoicePrintButtonActionPerformed
+
+        i.setCustomerId(getC());
+        System.out.println(getC().getCustomerId());
+        i.setTotalUnit(addProductTable.getRowCount());
+        i.setTotalPrice(new BigDecimal(invoiceTotal2Text.getText()));
+        i.setDiscount(new BigDecimal(invoiceDiscountText.getText()));
+        
+        
+       
+        
+        for(int i=0;i<addProductTable.getRowCount();i++){
+        TableModel model = addProductTable.getModel();
+        currentproduct = new Product();
+        currentproduct.setProductId(Integer.parseInt(model.getValueAt(i, 0).toString()));
+        currentproduct.setQuantity(Integer.parseInt(model.getValueAt(i, 2).toString()));
+        currentproduct.setSellingPrice(new BigDecimal(model.getValueAt(i, 3).toString()));
+        }
+        addproduct.add(currentproduct);
+       InvoiceControl.addInvoice(i,addproduct);
+       
+       ProductControl.updateQuantity(addproduct);
+       // InvoiceControl.addInvoiceProduct(addproduct);
+
+    }//GEN-LAST:event_invoicePrintButtonActionPerformed
 
     /**
      * @param args the command line arguments

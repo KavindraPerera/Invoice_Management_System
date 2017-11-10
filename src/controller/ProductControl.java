@@ -98,6 +98,7 @@ public class ProductControl {
         }
         return products;
     }
+
     public static void editProduct(Product p) {
         try {
             String sqleditProduct = "UPDATE `product` SET `Product_Name`=?,`Product_Description`=?,`Purchase_Price`=?,`Selling_Price`=?,`Quantity`=?,`Last_Changed_Date`=? WHERE `Product_ID`=?";
@@ -107,7 +108,7 @@ public class ProductControl {
             Connection con = DatabaseConnection.getConnection();
 
             PreparedStatement statement = con.prepareStatement(sqleditProduct);
-            
+
             statement.setString(1, p.getProductName());
             statement.setString(2, p.getDescripion());
             statement.setBigDecimal(3, p.getPurchasePrice());
@@ -124,16 +125,34 @@ public class ProductControl {
             System.out.println(ex);
         }
     }
-    public static void deleteProduct(Product p1){
+
+    public static void deleteProduct(Product p1) {
         try {
-            String sqlDeleteProduct="DELETE FROM `product` WHERE `Product_ID`=?";
+            String sqlDeleteProduct = "DELETE FROM `product` WHERE `Product_ID`=?";
             Connection con = DatabaseConnection.getConnection();
-            
+
             PreparedStatement statement = con.prepareStatement(sqlDeleteProduct);
             statement.setInt(1, p1.getProductId());
             statement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ProductControl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void updateQuantity(List<Product> product) {
+        Connection con = DatabaseConnection.getConnection();
+        for(Product p: product){
+            try {
+                int productId=p.getProductId();
+                int quantity=p.getQuantity();
+                String sql="UPDATE `product` SET `Quantity`=Quantity"+(-quantity)+",`Last_Changed_Date`=? WHERE `Product_ID`=?";
+                PreparedStatement statement = con.prepareStatement(sql);
+                statement.setDate(1, new java.sql.Date(new Date().getTime()));
+                statement.setInt(2, productId);
+                statement.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductControl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

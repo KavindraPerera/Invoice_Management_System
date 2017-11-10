@@ -7,6 +7,7 @@ package view;
 
 import controller.CustomerControl;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import model.Customer;
@@ -175,7 +176,8 @@ public class SelectCustomer extends javax.swing.JDialog {
     }//GEN-LAST:event_selectCustomerTableMouseEntered
 
     private void selectCustomerOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectCustomerOkButtonActionPerformed
-      int index = selectCustomerTable.getSelectedRow();
+      if(!selectCustomerTable.getSelectionModel().isSelectionEmpty()){
+        int index = selectCustomerTable.getSelectedRow();
         TableModel model = selectCustomerTable.getModel();
         customer=new Customer();
         customer.setCustomerId(Integer.parseInt(model.getValueAt(index, 0).toString()));
@@ -183,7 +185,9 @@ public class SelectCustomer extends javax.swing.JDialog {
         setCustomer(customer);
         
         this.dispose();
-        
+      }else{
+      JOptionPane.showMessageDialog(null, "Please Select customer ", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+      } 
         
       
      
