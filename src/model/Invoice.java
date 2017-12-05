@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Invoice {
     private int invoiceNumber;
-    private Customer customerId;
+    private Customer customer;
     private int totalUnit;
     private BigDecimal totalPrice;
     private BigDecimal discount;
@@ -26,12 +26,17 @@ public class Invoice {
 
     public Invoice(int invoiceNumber, Customer customerId, int totalUnit, BigDecimal totalPrice, BigDecimal discount, String invoiceDate, List<Product> products) {
         this.invoiceNumber = invoiceNumber;
-        this.customerId = customerId;
+        this.customer = customerId;
         this.totalUnit = totalUnit;
         this.totalPrice = totalPrice;
         this.discount = discount;
         this.invoiceDate = invoiceDate;
         this.products = products;
+    }
+
+    @Override
+    public String toString() {
+        return "Invoice{" + "invoiceNumber=" + invoiceNumber + ", customerId=" + customer + ", totalUnit=" + totalUnit + ", totalPrice=" + totalPrice + ", discount=" + discount + ", invoiceDate=" + invoiceDate + ", products=" + products + '}';
     }
 
     public List<Product> getProducts() {
@@ -52,12 +57,12 @@ public class Invoice {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public Customer getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(Customer customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public int getTotalUnit() {

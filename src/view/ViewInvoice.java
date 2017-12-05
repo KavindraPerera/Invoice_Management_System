@@ -5,6 +5,11 @@
  */
 package view;
 
+import controller.InvoiceControl;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import model.Invoice;
+
 /**
  *
  * @author DELL
@@ -17,6 +22,8 @@ public class ViewInvoice extends javax.swing.JFrame {
     public ViewInvoice() {
         initComponents();
         this.setLocationRelativeTo(null);
+       List<Invoice> invoice=InvoiceControl.getInvoices();
+        displayInvoice(invoice);
     }
 
     /**
@@ -34,7 +41,7 @@ public class ViewInvoice extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        viewInvoiceTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -57,7 +64,7 @@ public class ViewInvoice extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        viewInvoiceTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -68,7 +75,7 @@ public class ViewInvoice extends javax.swing.JFrame {
                 "Invoice No", "Customer Name", "Total", "Units", "Date"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(viewInvoiceTable);
 
         jLabel1.setFont(new java.awt.Font("Yu Mincho", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 0));
@@ -178,8 +185,24 @@ public class ViewInvoice extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JButton viewInvoiceSearchButton;
+    private javax.swing.JTable viewInvoiceTable;
     private javax.swing.JTextField viewInvoiceText;
     // End of variables declaration//GEN-END:variables
+void displayInvoice(List<Invoice> invoice) {
+        DefaultTableModel model = (DefaultTableModel) viewInvoiceTable.getModel();
+        model.setRowCount(0);
+        Object[] row = new Object[5];
+        for (int i = 0; i < invoice.size(); i++) {
+            row[0] = invoice.get(i).getInvoiceNumber();
+            row[1] = invoice.get(i).getCustomer().getCustomerName();
+            row[2] = invoice.get(i).getTotalPrice();
+            row[3] = invoice.get(i).getTotalUnit();
+            row[4] = invoice.get(i).getInvoiceDate();
+           
+            model.addRow(row);
+
+        }
+        viewInvoiceTable.setModel(model);
+    }
 }

@@ -465,29 +465,28 @@ public class Invoices extends javax.swing.JFrame {
     }//GEN-LAST:event_invoiceRemoveButtonActionPerformed
 
     private void invoicePrintButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoicePrintButtonActionPerformed
+        if (invoiceCustomerText.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Please Select Customer Name ", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            i.setCustomer(getC());
+            System.out.println(getC().getCustomerId());
+            i.setTotalUnit(addProductTable.getRowCount());
+            i.setTotalPrice(new BigDecimal(invoiceTotal2Text.getText()));
+            i.setDiscount(new BigDecimal(invoiceDiscountText.getText()));
 
-        i.setCustomerId(getC());
-        System.out.println(getC().getCustomerId());
-        i.setTotalUnit(addProductTable.getRowCount());
-        i.setTotalPrice(new BigDecimal(invoiceTotal2Text.getText()));
-        i.setDiscount(new BigDecimal(invoiceDiscountText.getText()));
-        
-        
-       
-        
-        for(int i=0;i<addProductTable.getRowCount();i++){
-        TableModel model = addProductTable.getModel();
-        currentproduct = new Product();
-        currentproduct.setProductId(Integer.parseInt(model.getValueAt(i, 0).toString()));
-        currentproduct.setQuantity(Integer.parseInt(model.getValueAt(i, 2).toString()));
-        currentproduct.setSellingPrice(new BigDecimal(model.getValueAt(i, 3).toString()));
+            for (int i = 0; i < addProductTable.getRowCount(); i++) {
+                TableModel model = addProductTable.getModel();
+                currentproduct = new Product();
+                currentproduct.setProductId(Integer.parseInt(model.getValueAt(i, 0).toString()));
+                currentproduct.setQuantity(Integer.parseInt(model.getValueAt(i, 2).toString()));
+                currentproduct.setSellingPrice(new BigDecimal(model.getValueAt(i, 3).toString()));
+            }
+            addproduct.add(currentproduct);
+            InvoiceControl.addInvoice(i, addproduct);
+
+            ProductControl.updateQuantity(addproduct);
+            // InvoiceControl.addInvoiceProduct(addproduct);
         }
-        addproduct.add(currentproduct);
-       InvoiceControl.addInvoice(i,addproduct);
-       
-       ProductControl.updateQuantity(addproduct);
-       // InvoiceControl.addInvoiceProduct(addproduct);
-
     }//GEN-LAST:event_invoicePrintButtonActionPerformed
 
     /**
